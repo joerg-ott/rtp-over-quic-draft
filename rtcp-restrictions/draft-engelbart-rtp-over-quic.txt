@@ -5,7 +5,7 @@
 Network Working Group                                             J. Ott
 Internet-Draft                                              M. Engelbart
 Intended status: Informational               Technical University Munich
-Expires: 4 November 2021                                      3 May 2021
+Expires: 9 November 2021                                      8 May 2021
 
 
                              RTP over QUIC
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 November 2021.
+   This Internet-Draft will expire on 9 November 2021.
 
 Copyright Notice
 
@@ -69,13 +69,14 @@ Table of Contents
      5.1.  Encoding: Binary representation
      5.2.  "How to transport / encapsulate"
    6.  Protocol Operation
-   7.  Used RTP/RTCP packet types
-   8.  Enhancements
-   9.  Discussion
-     9.1.  Impact of Connection Migration
-   10. Security Considerations
-   11. IANA Considerations
-   12. Normative References
+   7.  SDP Signalling
+   8.  Used RTP/RTCP packet types
+   9.  Enhancements
+   10. Discussion
+     10.1.  Impact of Connection Migration
+   11. Security Considerations
+   12. IANA Considerations
+   13. Normative References
    Acknowledgments
    Authors' Addresses
 
@@ -146,23 +147,28 @@ Table of Contents
    provide a way to query the maximum datagram size, so that an
    application can create RTP packets that always fit into a datagram.
 
-   Additionally, a QUIC implementation MUST expose the smoothed RTT as
-   descirbed in Section 5 of [QUIC-RECOVERY] to the application.
+   Additionally, a QUIC implementation MUST expose the recorded RTT
+   statistics as described in Section 5 of [QUIC-RECOVERY] to the
+   application.  These statistics include the minium observed RTT over a
+   period of time (min_rtt), exponentially-weighted moving average
+   (smoothed_rtt) and the mean deviation (rttvar).  These values are
+   necessary to perform congestion control as explained in Section 4.2.
 
    Section 7.1 of [QUIC-RECOVERY] also specifies how QUIC treats ECN
    marks if ECN is supported by the network path.  If ECN counts can be
    exported from a QUIC implementation, these may be used to improve
-   congestion control as described in the next section.
+   congestion control, too.
 
 4.2.  Congestion Controller Interface
 
    There are different congestion control algorithms proposed by RMCAT
    to implement application layer congestion control for real-time
-   communications.  These algorithms keep track of the sent packets and
-   typically require a list of received packets together with the
-   timestamps at which they were received by a receiver to estimate the
-   current bandwidth utilization and whether a media encoder can be
-   configured to produce output at a higher or lower rate.
+   communications.  To estimate the currently available bandwidth, these
+   algorithms keep track of the sent packets and typically require a
+   list of received packets together with the timestamps at which they
+   were received by a receiver.  The bandwidth estimation can then be
+   used to decide, whether the media encoder can be configured to
+   produce output at a higher or lower rate.
 
    A congestion controller used for RTP over QUIC should be able to
    compute an adequate bandwidth estimation using the following inputs:
@@ -172,7 +178,7 @@ Table of Contents
    *  A list of packets that were acknowledged by the receiver
 
    *  For each acknowledged packet, a delay between the sent- and
-      receive-times of the packet
+      receive-timestamps of the packet
 
    *  Minimum and average RTT estimations and the RTT variation as
       calculated by QUIC [QUIC-RECOVERY]
@@ -180,9 +186,9 @@ Table of Contents
    *  Optionally ECN marks may be used, if supported by the network and
       exposed by the QUIC implementation.
 
-   A congestion controller MUST expose a maximum bitrate to which an
-   encoder can safely be configured without overloading the network.
-   Additionally a congestion controller may provide a pacing mechanism.
+   A congestion controller MUST expose a target bitrate to which the
+   encoder should be configured and may additionally provide a pacing
+   mechanism.
 
 4.3.  Codec Interface
 
@@ -221,7 +227,7 @@ Table of Contents
    This section describes how senders and receivers can exchange RTP
    packets using QUIC.  While the receiver side is very simple, the
    sender side has to keep track of sent packets and corresponding
-   acknowledgement to implement congestion control.
+   acknowledgements to implement congestion control.
 
    RTP/RTCP packets that are submitted to an RTP over QUIC
    implementation are buffered in a queue.  The congestion controller
@@ -233,12 +239,14 @@ Table of Contents
    The implementation has to keep track of sent packets in order to
    build the feedback for a congestion controller described in
    Section 4.2.  Each sent packet is mapped to the datagram in which it
-   was sent over QUIC and when the QUIC implementation signals an
+   was sent over QUIC.  When the QUIC implementation signals an
    acknowledgement for a specific datagram, the packet that was sent in
    this datagram is marked as received.  Together with the received
    mark, an estimation of the delay at which the packet was received by
-   the peer can be stored.  This estimation can be calculated from the
-   RTT exposed by QUIC.
+   the peer can be stored.  Assuming the RTT is divided equally between
+   the link from the sender to the receiver and the link back to the
+   sender, this estimation can be calculated using the RTT exposed by
+   QUIC divided by two.
 
    Depending on the requirements of the used congestion controll
    algorithm, a feedback report including the information described in
@@ -284,21 +292,15 @@ Table of Contents
    is then passed to the RTP session which was assigned the given flow
    identifier.
 
-      *TODO:* Decide what to do whith unknown flow IDs and streams that
-      do not belong to RTP over QUIC in the case where an application
-      sends other data apart from RTP in datagrams over the same QUIC
-      connection.  Some options are:
+7.  SDP Signalling
 
-      -  If no RTP session with the flow identifier was registered, the
-         packet is dropped.
+      *TODO:* Describe how SDP can be used to setup session, e.g. assign
+      flow IDs.
 
-      -  An error can be signaled to the application.
+      *TODO:* How to deal with different applications using Datagrams on
+      the same QUIC connection?
 
-      -  The content can be forwarded to the application without being
-         associated to a RTP stream.  (This would probably require a way
-         to assign flow IDs more gerenally than per RTP stream)
-
-7.  Used RTP/RTCP packet types
+8.  Used RTP/RTCP packet types
 
    Any RTP packet can be sent over QUIC and no RTCP packets are used by
    default.  Since QUIC already includes some features which are usually
@@ -323,7 +325,7 @@ Table of Contents
       connections manage ports on their own, this is not required for
       RTP over QUIC.
 
-8.  Enhancements
+9.  Enhancements
 
    The RTT measured by QUIC may not be very precise because it can be
    influenced by delayed ACKs.  An alternative the RTT is to explicitly
@@ -341,19 +343,19 @@ Table of Contents
       receiver so maybe we need to specify some RTCP feedback in the
       previous section?
 
-9.  Discussion
+10.  Discussion
 
-9.1.  Impact of Connection Migration
+10.1.  Impact of Connection Migration
 
-10.  Security Considerations
+11.  Security Considerations
 
    TODO Security
 
-11.  IANA Considerations
+12.  IANA Considerations
 
    This document has no IANA actions.
 
-12.  Normative References
+13.  Normative References
 
    [QUIC-DATAGRAM]
               Pauly, T., Ed., Kinnear, E., Ed., and D. Schinazi, Ed.,
