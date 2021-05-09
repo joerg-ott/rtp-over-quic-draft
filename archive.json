@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-05-06T00:36:03.463843+00:00",
+  "timestamp": "2021-05-09T00:40:28.267517+00:00",
   "repo": "mengelbart/rtp-over-quic-draft",
   "labels": [
     {
@@ -56,24 +56,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjI4OTU5NzUz",
       "title": "Draft section about used RTP/RTCP packets and restrictions",
       "url": "https://github.com/mengelbart/rtp-over-quic-draft/pull/1",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mengelbart",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2021-05-03T09:13:51Z",
-      "updatedAt": "2021-05-03T09:13:51Z",
+      "updatedAt": "2021-05-08T15:47:21Z",
       "baseRepository": "mengelbart/rtp-over-quic-draft",
       "baseRefName": "main",
-      "baseRefOid": "a463ed575d9bf3bc8059ec4668bcf5c506431379",
+      "baseRefOid": "15dfd07af0ac380d51b42c952e096d2ee41e3c7e",
       "headRepository": "mengelbart/rtp-over-quic-draft",
       "headRefName": "rtcp-restrictions",
-      "headRefOid": "ca58413d2d7d92981970197ebff0fb7d02ec0a25",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "e691a73184a513899fe992c574057897fa342577",
+      "closedAt": "2021-05-08T15:47:21Z",
+      "mergedAt": "2021-05-08T15:47:21Z",
+      "mergedBy": "mengelbart",
+      "mergeCommit": {
+        "oid": "c416b71a37b9ff8891c9ba62af876c9e9c25334c"
+      },
       "comments": [],
       "reviews": []
     }
