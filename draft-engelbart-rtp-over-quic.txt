@@ -69,8 +69,6 @@ Table of Contents
      4.2.  Congestion Controller Interface
      4.3.  Codec Interface
    5.  Packet Format
-     5.1.  Encoding: Binary representation
-     5.2.  "How to transport / encapsulate"
    6.  Protocol Operation
    7.  SDP Signalling
    8.  Used RTP/RTCP packet types
@@ -224,8 +222,14 @@ Table of Contents
 
    A congestion controller MUST expose a "target_bitrate" to which the
    encoder should be configured to fully utilize the available
-   bandwidth.  Additionally, the congestion controller may provide a
-   pacing mechanism.
+   bandwidth.
+
+   It is assumed that the congestion controller provides a pacing
+   mechanism to determine when a packet can be send and to avoid bursts.
+   All of the currently proposed congestion control algorithms for real-
+   time communications provide such a pacing mechanism.  The use of
+   congestion controllers which don't provide a pacing mechanism is out
+   of scope of this document.
 
 4.3.  Codec Interface
 
@@ -239,8 +243,6 @@ Table of Contents
    whenever the congestion controller updates its "target_bitrate".
 
 5.  Packet Format
-
-5.1.  Encoding: Binary representation
 
    All packets MUST be sent as datagrams with the following format:
 
@@ -261,7 +263,7 @@ Table of Contents
    same flow identifier (following the procedures defined in [RFC5761],
    or they MAY be sent using different flow identifiers.  The respective
    mode of operation MUST be indicated using the appropriate signaling,
-   e.g., when using SDP as discussed in section {#sdp}.
+   e.g., when using SDP as discussed in Section 7.
 
    RTP and RTCP packets of different RTP sessions MUST be sent using
    different flow identifiers.
@@ -270,8 +272,6 @@ Table of Contents
    non-RTP/RTCP datagrams is the responsibility of the application by
    means of appropriate use of flow identifiers and the corresponding
    signaling.
-
-5.2.  "How to transport / encapsulate"
 
    RTP senders SHOULD consider the header overhead assosiated with QUIC
    datagrams and sure that the RTP/RTCP packets including their
@@ -446,10 +446,10 @@ Table of Contents
    time estimation derived from the RTT as described in Section 6 to
    create the "pkt_delay_list".
 
-      *TODO:* Using OWD in ACKS tells a sender the OWD from receiver to
-      sender, but we might be more interested in OWD from sender to
-      receiver so maybe we need to specify some RTCP feedback in the
-      previous section?
+      *TODO:* Even with one-way delay measurements it is still not
+      possible to identify exact timestamps for individual packets,
+      since the timestamp may be sent with an ACK that acks more than
+      one earlier packet.
 
 10.  Discussion
 
