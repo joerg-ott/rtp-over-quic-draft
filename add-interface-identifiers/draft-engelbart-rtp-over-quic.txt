@@ -176,9 +176,10 @@ Table of Contents
    Additionally, a QUIC implementation MUST expose the recorded RTT
    statistics as described in Section 5 of [QUIC-RECOVERY] to the
    application.  These statistics include the minium observed RTT over a
-   period of time (min_rtt), exponentially-weighted moving average
-   (smoothed_rtt) and the mean deviation (rttvar).  These values are
-   necessary to perform congestion control as explained in Section 4.2.
+   period of time ("min_rtt"), exponentially-weighted moving average
+   ("smoothed_rtt") and the mean deviation ("rtt_var").  These values
+   are necessary to perform congestion control as explained in
+   Section 4.2.
 
    Section 7.1 of [QUIC-RECOVERY] also specifies how QUIC treats ECN
    marks if ECN is supported by the network path.  If ECN counts can be
@@ -312,7 +313,7 @@ Table of Contents
 
    In a regular interval, the "pkt_status_list" and the "pkt_delay_list"
    MUST be passed to the congestion controller together with the current
-   timestamp "t_current" and the RTT statistics "rtt_min",
+   timestamp "t_current" and the RTT statistics "min_rtt",
    "smoothed_rtt" and "rtt_var".  If available, the feedback MAY also
    contain the ECN marks.
 
@@ -433,17 +434,17 @@ Table of Contents
 
 9.  Enhancements
 
-   The RTT measured by QUIC may not be very precise because it can be
-   influenced by delayed ACKs.  An alternative the RTT is to explicitly
-   measure a one way delay.  [QUIC-TS] suggests an extension for QUIC to
-   implement one way delay measurements using a timestamp carried in a
-   special QUIC frame.  The new frame carries the time at which a packet
-   was sent.  This timestamp can be used by the receiver to estimate a
-   one way delay as the difference between the time at which a packet
-   was received and the timestamp in the received packet.  The one way
-   delay can then be used as a replacement for the receive time
-   estimation derived from the RTT as described in Section 6 to create
-   the "pkt_delay_list".
+   The RTT statistics collected by QUIC may not be very precise because
+   it can be influenced by delayed ACKs.  An alternative the RTT is to
+   explicitly measure a one way delay.  [QUIC-TS] suggests an extension
+   for QUIC to implement one way delay measurements using a timestamp
+   carried in a special QUIC frame.  The new frame carries the time at
+   which a packet was sent.  This timestamp can be used by the receiver
+   to estimate a one way delay as the difference between the time at
+   which a packet was received and the timestamp in the received packet.
+   The one way delay can then be used as a replacement for the receive
+   time estimation derived from the RTT as described in Section 6 to
+   create the "pkt_delay_list".
 
       *TODO:* Using OWD in ACKS tells a sender the OWD from receiver to
       sender, but we might be more interested in OWD from sender to
