@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-05-16T00:51:25.827414+00:00",
+  "timestamp": "2021-05-18T00:51:29.975157+00:00",
   "repo": "mengelbart/rtp-over-quic-draft",
   "labels": [
     {
@@ -63,7 +63,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2021-05-03T09:13:51Z",
-      "updatedAt": "2021-05-08T15:47:21Z",
+      "updatedAt": "2021-05-17T10:29:16Z",
       "baseRepository": "mengelbart/rtp-over-quic-draft",
       "baseRefName": "main",
       "baseRefOid": "15dfd07af0ac380d51b42c952e096d2ee41e3c7e",
@@ -75,6 +75,34 @@
       "mergedBy": "mengelbart",
       "mergeCommit": {
         "oid": "c416b71a37b9ff8891c9ba62af876c9e9c25334c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjQ1NzY5NzY2",
+      "title": "Add identifiers to the cc interface",
+      "url": "https://github.com/mengelbart/rtp-over-quic-draft/pull/2",
+      "state": "MERGED",
+      "author": "mengelbart",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-05-17T11:08:02Z",
+      "updatedAt": "2021-05-17T16:53:53Z",
+      "baseRepository": "mengelbart/rtp-over-quic-draft",
+      "baseRefName": "main",
+      "baseRefOid": "386a04a2a6985f77ba9e9e4b4d46f8ba3b890ac8",
+      "headRepository": "mengelbart/rtp-over-quic-draft",
+      "headRefName": "add-interface-identifiers",
+      "headRefOid": "cb6e602846ddc421cad78b5dae14d2f065b7e35a",
+      "closedAt": "2021-05-17T16:31:42Z",
+      "mergedAt": "2021-05-17T16:31:42Z",
+      "mergedBy": "mengelbart",
+      "mergeCommit": {
+        "oid": "3fdbd66070a57196e538e1c4eaa389d262d47ebe"
       },
       "comments": [],
       "reviews": []
