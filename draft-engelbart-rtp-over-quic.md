@@ -107,6 +107,16 @@ normative:
 
 informative:
 
+  QRT:
+    title: "QRT: QUIC RTP Tunnelling"
+    date: {DATE}
+    seriesinfo:
+      Internet-Draft: draft-hurst-quic-rtp-tunnelling-01
+      -
+        ins: S. Hurst
+        name: Sam Hurst
+        org: BBC Research & Development
+        role: editor
 
 
 --- abstract
@@ -144,6 +154,9 @@ upon how to signal media over QUIC using the Session Description
 Protocol (SDP) {{!RFC4566}}.
 
 The scope of this document is limited to unicast RTP/RTCP.
+
+Note that this draft is similar in spirit to but differs in numerous ways from
+{{QRT}}.
 
 
 # Terminology and Notation
